@@ -296,7 +296,7 @@ if __name__=='__main__':
     
     dt, utt_i, goal_id, goals, dt_meaning = get_data()
     
-    yoon_model = yoon_model_functions.factory_yoon_model(
+    yoon_model = factory_yoon_model(
         dt,
         dt_meaning
     )
