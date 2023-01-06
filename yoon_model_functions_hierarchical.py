@@ -5,8 +5,13 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider, Button
 
 import pymc as pm
-import aesara
-import aesara.tensor as at
+
+try:
+    import aesara
+    import aesara.tensor as at
+except ModuleNotFoundError:
+    import pytensor as aesara
+    import pytensor.tensor as at
 import arviz as az
 
 from modelling_functions import (
