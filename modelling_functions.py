@@ -3,8 +3,12 @@ import seaborn as sns
 import pandas as pd
 
 import pymc as pm
-import aesara
-import aesara.tensor as at
+try:
+    import aesara
+    import aesara.tensor as at
+except ModuleNotFoundError:
+    import pytensor as aesara
+    import pytensor.tensor as at
 import arviz as az
 
 
