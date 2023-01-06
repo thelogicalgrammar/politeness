@@ -1,2 +1,3 @@
-# PlauDeNotes
- Notes on model for plausible deniability
+# Politeness 
+
+Notes on a plausible deniability model of polite language use
