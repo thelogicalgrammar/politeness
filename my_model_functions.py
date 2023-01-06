@@ -249,7 +249,7 @@ def my_model_factory(df):
             sigma=5,
             shape=5,
             initval=[-8, -2, 0, 1, 1.2],
-            transform=pm.distributions.transforms.ordered
+            transform=pm.distributions.transforms.Ordered()
         )
         
         #### LIKELIHOOD
