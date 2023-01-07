@@ -432,7 +432,8 @@ if __name__=='__main__':
     
     with yoon_model:
         yoon_trace = pm.sample(
-            draws=10000
+            draws=5000,
+            target_accept=0.95
         )
     
     az.to_netcdf(
