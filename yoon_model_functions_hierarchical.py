@@ -33,7 +33,7 @@ def yoon_S1_hierarchical(values, alpha, costs, L, phi_grid_n=40, lib='np'):
     if lib == 'at':
         lib = at
     else:
-        lib == np
+        lib = np
     
     # dimensions (utterance, state)
     L0 = normalize(L,1)
@@ -82,6 +82,8 @@ def yoon_utilities_hierarchical(S1, phi, values):
         dims: (participant, phi value, utterance, state)
     phi: int tensor
         dims: (participant, goal condition)
+        Contains the index of the discretized value of phi
+        for each participant in each goal condition
     values: float tensor
         dims: (utterance)
     """
@@ -115,15 +117,19 @@ def yoon_utilities_hierarchical(S1, phi, values):
     # and therefore I need to use the inferred phi (argument)
     # rather than grid approximation
     
-    # dims: (participant, goal condition, utterance, state)
     # Get the probabilities with speaker's actual phi
     # pm.Deterministic('phi_val', aesara.printing.Print()(phi))
+    # L1_s_phi_given_w_grid has dims: (participant, phi, utterance, state)
+    # dims: (participant, goal condition, utterance, state)
     L1_s_phi_given_w = L1_s_phi_given_w_grid[
         # for each participant
         at.arange(L1_s_phi_given_w_grid.shape[0])[:,None],
         # get one production array per condition
+        # phi should take values in [0, 99] (included)
         phi
     ]
+    
+    pm.Deterministic('max phi', aesara.printing.Print()(phi.max()))
     
     # print("L1_s_phi_given_w: ", L1_s_phi_given_w.eval())
     
@@ -361,16 +367,19 @@ def factory_yoon_model(dt, dt_meaning):
             )
         )
 
+        # index of the discretized 
         # politeness weight of each agent 
         # in each goal condition!
+        # Will be used to index an array
         # Shape: (participant, goal condition)
         phi = pm.Binomial(
             'phi',
+            # fixed n parameter set to e.g. 99
             n=phi_grid_n-1,
+            # (participant, goal condition)
             p=phi_ps,
-            shape=(203, 3)
+            # shape=(203, 3)
         )
-
 
         ##### LIKELIHOOD
 
@@ -432,8 +441,8 @@ if __name__=='__main__':
     
     with yoon_model:
         yoon_trace = pm.sample(
-            draws=5000,
-            target_accept=0.95
+            draws=3000,
+            target_accept=0.99
         )
     
     az.to_netcdf(
