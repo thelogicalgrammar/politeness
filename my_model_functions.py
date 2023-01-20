@@ -222,7 +222,17 @@ def my_model_factory(df):
         
         # temperature of pretend, 
         # one for each participant
-        pretend_temp = pm.Exponential(
+        # with hierarchical structure
+        
+        verosim_mu = pm.Normal(
+            'verosim_mu'
+        )
+        
+        verosim_sigma = pm.HalfNormal(
+            'verosim_sigma'
+        )
+        
+        pretend_temp = pm.LogNormal(
             "pretend_temp",
             lam=0.9,
             shape=203
