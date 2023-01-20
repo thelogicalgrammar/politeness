@@ -10,13 +10,13 @@ except ModuleNotFoundError:
     # If pymc v5 is installed
     import pytensor as aesara
     import pytensor.tensor as at
+    
+    # Needed for integration
+    from scipy.integrate import quad, quad_vec
+    from pytensor.graph.op import Op
+    from pytensor.graph.basic import Apply
+    from pytensor import clone_replace
 import arviz as az
-
-# Needed for integration
-from scipy.integrate import quad, quad_vec
-from pytensor.graph.op import Op
-from pytensor.graph.basic import Apply
-from pytensor import clone_replace
 
 
 def normalize(arr, axis):
@@ -93,7 +93,8 @@ class Integrate(Op):
     # on a bounded interval
     
     # Adapted from:
-    # https://discourse.pymc.io/t/custom-theano-op-to-do-numerical-integration/734/12
+    # https://discourse.pymc.io/t/
+    # custom-theano-op-to-do-numerical-integration/734/12
     # With some modifications!
     
     def __init__(self, expr, var, *extra_vars):
@@ -154,7 +155,8 @@ class Integrate(Op):
         When an Op has multiple inputs, their order in the inputs argument to
         Apply is important: 
         Aesara will call make_node(*inputs) to copy the graph, so it is important 
-        not to change the semantics of the expression by changing the argument order.
+        not to change the semantics of the expression 
+        by changing the argument order.
         """
         
         self._extra_vars_node = [
@@ -183,7 +185,8 @@ class Integrate(Op):
         return Apply(
             # op: The operation that produces `outputs` given `inputs`.
             op=self, 
-            # inputs: The arguments of the expression modeled by the `Apply` node.
+            # inputs: The arguments of the expression 
+            # modeled by the `Apply` node.
             inputs=[self._start, self._stop] + list(self._extra_vars_node), 
             # outputs: The outputs of the expression modeled by the `Apply` node.
             # NOTE: This is a scalar if self._expr is a scalar,
@@ -210,12 +213,16 @@ class Integrate(Op):
         out: List
             output_storage is a list of storage cells where the output 
             is to be stored. There is one storage cell for each output of the Op. 
-            The data put in output_storage must match the type of the symbolic output. 
-            It is forbidden to change the length of the list(s) contained in output_storage. 
-            A function Mode may allow output_storage elements to persist between evaluations, 
+            The data put in output_storage must match the type 
+            of the symbolic output. 
+            It is forbidden to change the length of the list(s) 
+            contained in output_storage. 
+            A function Mode may allow output_storage elements 
+            to persist between evaluations, 
             or it may reset output_storage cells to hold a value of None. 
             It can also pre-allocate some memory for the Op to use. 
-            This feature can allow perform to reuse memory between calls, for example. 
+            This feature can allow perform to reuse memory between calls, 
+            for example. 
             If there is something preallocated in the output_storage, 
             it will be of the good dtype, but can have the wrong shape and 
             have any stride pattern.
@@ -279,13 +286,15 @@ class Integrate(Op):
         for an explanation
         
         Inputs in this case contains: 
-        [lower integration bound, upper integration bound, ...other variables of function]
+        [lower integration bound, upper integration bound, ...
+        other variables of function]
         
         It takes two arguments inputs and output_gradients, 
         which are both lists of Variables, and those must be operated on 
         using Aesara’s symbolic language. 
         
-        The Op.grad() method must return a list containing one Variable for each input. 
+        The Op.grad() method must return a list containing one 
+        Variable for each input. 
         
         Each returned Variable represents the gradient with respect to that input 
         computed based on the symbolic gradients with respect to each output. 
@@ -293,7 +302,8 @@ class Integrate(Op):
         If the output is not differentiable with respect to an input 
         then this method should be defined to return a variable of type NullType 
         for that input. 
-        Likewise, if you have not implemented the gradient computation for some input, 
+        Likewise, if you have not implemented the gradient computation 
+        for some input, 
         you may return a variable of type NullType for that input. 
         
         Please refer to Op.grad() for a more detailed view.
