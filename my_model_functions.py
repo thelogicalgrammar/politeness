@@ -225,11 +225,11 @@ def my_model_factory(df):
         # with hierarchical structure
         
         verosim_mu = pm.Normal(
-            'verosim_mu'
+            'pretend_temp_mu'
         )
         
         verosim_sigma = pm.HalfNormal(
-            'verosim_sigma'
+            'pretend_temp_sigma'
         )
         
         pretend_temp = pm.LogNormal(
