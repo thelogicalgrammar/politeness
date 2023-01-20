@@ -234,7 +234,8 @@ def my_model_factory(df):
         
         pretend_temp = pm.LogNormal(
             "pretend_temp",
-            lam=0.9,
+            mu=verosim_mu,
+            sigma=verosim_sigma,
             shape=203
         )
         pretend_temp = pretend_temp[:,None]
