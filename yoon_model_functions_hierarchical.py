@@ -2,7 +2,6 @@ import numpy as np
 import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.widgets import Slider, Button
 
 import pymc as pm
 
@@ -128,9 +127,7 @@ def yoon_utilities_hierarchical(S1, phi, values):
         # phi should take values in [0, 99] (included)
         phi
     ]
-    
-    pm.Deterministic('max phi', aesara.printing.Print()(phi.max()))
-    
+        
     # print("L1_s_phi_given_w: ", L1_s_phi_given_w.eval())
     
     # equation 3 in 2020 paper
@@ -374,11 +371,17 @@ def factory_yoon_model(dt, dt_meaning):
         # Shape: (participant, goal condition)
         phi = pm.Binomial(
             'phi',
-            # fixed n parameter set to e.g. 99
+            # fixed n parameter set to e.g. 99 
+            # So that phi takes values between 0 and 99 (inclusive)
             n=phi_grid_n-1,
             # (participant, goal condition)
             p=phi_ps,
             # shape=(203, 3)
+        )
+        
+        pm.Deterministic(
+            'max phi', 
+            aesara.printing.Print('phi max: ')(phi.max())
         )
 
         ##### LIKELIHOOD

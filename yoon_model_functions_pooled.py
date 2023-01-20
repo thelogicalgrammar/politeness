@@ -2,7 +2,6 @@ import numpy as np
 import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.widgets import Slider, Button
 
 import pymc as pm
 try:
@@ -33,7 +32,7 @@ def yoon_S1(values, alpha, costs, L, phi_grid_n=40, lib='np'):
     if lib == 'at':
         lib = at
     else:
-        lib == np
+        lib = np
     
     # dimensions (utterance, state)
     L0 = normalize(L,1)

@@ -83,6 +83,7 @@ def calculate_polite_pymc(s1_rationality,
             [1, 1, 1, 1, 0]
         ]),
         1,
+        # add a little error
         1e-10
     )
     
@@ -164,12 +165,29 @@ def my_model_factory(df):
         
         ##### PRIORS
         
-        # Rationality is specified for each participant
-        s1_rationality = pm.Exponential(
-            "s1_rationality",
-            lam=0.9,
-            shape=203
+        s1_mu = pm.Normal(
+            's1_mu'
         )
+        
+        s1_sigma = pm.HalfNormal(
+            's1_sigma'
+        )
+        
+        # Rationality is specified for each participant
+        s1_rationality = pm.LogNormal(
+            's1_rationality',
+            mu=s1_mu,
+            sigma=s1_sigma,
+            shape=(203)
+        )
+        
+        # s1_rationality = pm.Exponential(
+        #     "s1_rationality",
+        #     lam=0.9,
+        #     shape=203
+        # )
+        
+        # dims (participant, 1)
         s1_rationality = s1_rationality[:,None]
         
         # verosimilitude is specified for each condition as a whole
