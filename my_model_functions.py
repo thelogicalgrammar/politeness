@@ -100,6 +100,8 @@ def calculate_polite_pymc(s1_rationality,
     # is smoothed. Otherwise you have to use a masked mean.
     # Expected social value of each utterance
     expected_social_value = at.mean(
+        # it's important to multiply with L0
+        # rather than literal meaning
         values * L0, 
         1,
         keepdims=True
@@ -224,18 +226,18 @@ def my_model_factory(df):
         # one for each participant
         # with hierarchical structure
         
-        verosim_mu = pm.Normal(
+        pretend_temp_mu = pm.Normal(
             'pretend_temp_mu'
         )
         
-        verosim_sigma = pm.HalfNormal(
+        pretend_temp_sigma = pm.HalfNormal(
             'pretend_temp_sigma'
         )
         
         pretend_temp = pm.LogNormal(
             "pretend_temp",
-            mu=verosim_mu,
-            sigma=verosim_sigma,
+            mu=pretend_temp_mu,
+            sigma=pretend_temp_sigma,
             shape=203
         )
         pretend_temp = pretend_temp[:,None]
@@ -283,7 +285,7 @@ def my_model_factory(df):
         
         #### LIKELIHOOD
 
-        # shape (id, goal, utterance, state)
+        # shape (participant id, goal, utterance, state)
         log_S1 = calculate_polite_pymc(
             s1_rationality,
             verosimilitude, 
@@ -295,7 +297,7 @@ def my_model_factory(df):
         # remove the middle state from S1
         log_S1 = log_S1[:,:,:,[0,1,3,4]]
 
-        # shape (observation, possible utterance)
+        # shape (datapoint, possible utterance)
         logp_production = log_S1[part_id,goal,:,true_state]
 
         chosen_utterances = pm.Categorical(

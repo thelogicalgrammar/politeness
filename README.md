@@ -1,3 +1,3 @@
 # Politeness 
 
-Notes on a plausible deniability model of polite language use
+This repo contains a computational model of polite language use.
