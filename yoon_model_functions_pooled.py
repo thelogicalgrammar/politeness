@@ -273,7 +273,7 @@ def factory_yoon_model(dt, dt_meaning):
 
         # each combination of goal and state
         # should give a prob vector over utterances
-        print(S2.eval().sum((1)))
+        # print(S2.eval().sum((1)))
 
         p_production = S2[
             dt.goal_id,

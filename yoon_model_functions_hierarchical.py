@@ -379,10 +379,10 @@ def factory_yoon_model(dt, dt_meaning):
             # shape=(203, 3)
         )
         
-        pm.Deterministic(
-            'max phi', 
-            aesara.printing.Print('phi max: ')(phi.max())
-        )
+        # pm.Deterministic(
+        #     'max phi', 
+        #     aesara.printing.Print('phi max: ')(phi.max())
+        # )
 
         ##### LIKELIHOOD
 
